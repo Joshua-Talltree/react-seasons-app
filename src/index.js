@@ -1,25 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import SeasonDisplay from './SeasonDisplay';
 
 class App extends React.Component {
-    constructor(props) {
-        super(props);
+    state = {lat: null, errorMessage: '' };
 
-        // THIS IS THE ONLY TIME we do direct assignment to this.state
-        this.state = {lat: null, errorMessage: ''};
-
+    // good place to do data loading, all data loading events go in componentDidMount function
+    componentDidMount() {
         window.navigator.geolocation.getCurrentPosition(
-            position => {
-                // in order to update our state object, we called setState
-                this.setState({lat: position.coords.latitude});
-
-                // don't do this!!!
-                // this.state.lat = position.coords.latitude
-            },
-            err => {
-                this.setState({errorMessage: err.message});
-            }
+            position => this.setState({lat: position.coords.latitude}),
+            err => this.setState({errorMessage: err.message})
         );
+    }
+
+    // good place to do more data-loading when state/props change
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log('My component was just updated - it rerendered!')
     }
 
     // React says that we have to define render!!1
@@ -29,7 +25,7 @@ class App extends React.Component {
        }
 
        if (!this.state.errorMessage && this.state.lat) {
-           return <div>Latitude: {this.state.lat}</div>
+           return <SeasonDisplay lat = {this.state.lat} />
        }
 
        return <div>Loading!</div>
