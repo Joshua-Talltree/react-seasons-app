@@ -19,17 +19,27 @@ class App extends React.Component {
         console.log('My component was just updated - it rerendered!')
     }
 
+    renderContent() {
+        if (this.state.errorMessage && !this.state.lat) {
+            return <div>Error: {this.state.errorMessage}</div>
+        }
+
+        if (!this.state.errorMessage && this.state.lat) {
+            return <SeasonDisplay lat = {this.state.lat} />
+        }
+
+        return <Spinner />;
+    }
+
+    // conditional logic goes into a helper method
+
     // React says that we have to define render!!1
     render() {
-       if (this.state.errorMessage && !this.state.lat) {
-           return <div>Error: {this.state.errorMessage}</div>
-       }
-
-       if (!this.state.errorMessage && this.state.lat) {
-           return <SeasonDisplay lat = {this.state.lat} />
-       }
-
-       return <Spinner />;
+        return (
+            <div className="border red">
+                {this.renderContent()}
+            </div>
+        );
     }
 }
 
